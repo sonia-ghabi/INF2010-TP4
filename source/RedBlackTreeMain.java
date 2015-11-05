@@ -18,7 +18,7 @@
           tree.printFancyTree();
           System.out.println();
       }
-      /*
+      
       // Verifier find()
       Integer n = tree.find(20);
       System.out.print("Recherche valeur 20 : ");
@@ -35,7 +35,7 @@
         System.out.println("Noeud introuvable.");
             
       System.out.println();
-      
+      /*
       // Affichage pre-ordre et post-ordre
       tree.printTreePreOrder();
       tree.printTreePostOrder();

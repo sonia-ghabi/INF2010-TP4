@@ -155,7 +155,7 @@ public class RedBlackTree<T extends Comparable<? super T> >
 				  // P est enfant de droite de G
 				  && X.parent == X.grandParent().rightChild) {
 			  // Rotation a droite sur P
-			  	rotateRight(X.grandParent());
+			  	rotateRight(X);
 			  	insertionCase5(X.rightChild);
 				 return;
 			  }
@@ -168,7 +168,7 @@ public class RedBlackTree<T extends Comparable<? super T> >
 				  // P est enfant de gauche de G
 				  && X.parent == X.grandParent().leftChild) {
 			  // Rotation a gauche sur P
-			  	rotateLeft(X.grandParent());
+			  	rotateLeft(X);
 			  	insertionCase5(X.leftChild);
 				 return;
 			  }
@@ -194,7 +194,7 @@ public class RedBlackTree<T extends Comparable<? super T> >
 			   X.grandParent().setToRed();
 		   }
 			  // Rotation a gauche sur G
-			  	rotateLeft(X.grandParent());
+			  	rotateLeft(X.parent);
 				 return;
 	   }
 	   
@@ -213,61 +213,78 @@ public class RedBlackTree<T extends Comparable<? super T> >
 			   X.grandParent().setToRed();
 		   }
 			  // Rotation a droite sur G
-			  	rotateRight(X.grandParent());
+			  	rotateRight(X.parent);
 				 return;
 	   }
       return; 
    }
    
-   private void rotateLeft( RBNode<T> G )
+   private void rotateLeft( RBNode<T> X )
    {
       // A MODIFIER/COMPLÉTER
-	  // Cas droite gauche
-	   RBNode<T> P;
-	   RBNode<T> X;
-	   if(G.leftChild.color == RBNode.RB_COLOR.RED){
-		   P = G.leftChild;
-		   X = P.rightChild;
-		   RBNode<T> sousArbre = X.leftChild;
-		   P.rightChild = sousArbre;
-		   X.leftChild = P;
-		   G.leftChild = X;
-		   return;
+	   // X est le noeud qu'on veut remonter (il prend la place de son père)
+	   RBNode<T> P = X.parent;
+	   RBNode<T> G = X.grandParent();
+	   // On regarde si le pere de X est a droite ou a gauche de son grand pere
+	   // pour pouvoir placer X à la bonne place apres 
+	   boolean aDroite = false;
+	   if(P == G.rightChild){
+		   aDroite = true;
 	   }
-	   // Cas droite droite
-	   else {
-		   P = G.rightChild;
-		   X = P.rightChild;
-		   RBNode<T> sousArbre = P.leftChild;
-		   G.rightChild = sousArbre;
-		   P.leftChild = G;
-		   return;
-	   }
-   }
-   
-   private void rotateRight( RBNode<T> G )
-   {
-	   RBNode<T> P;
-	   RBNode<T> X;
-	   // cas gauche gauche
-	   if(G.leftChild.color == RBNode.RB_COLOR.RED) {
-		   P = G.leftChild;
-		   X = P.leftChild;
-		   RBNode<T> sousArbre = P.rightChild;
-		   G.leftChild = sousArbre;
-		   P.rightChild = G;
-		   return;
-	   }
-	   // cas gauche droite
-	   else {
-		   P = G.rightChild;
-		   X = P.leftChild;
-		   RBNode<T> sousArbre = X.rightChild;
-		   X.rightChild = P;
-		   P.leftChild = sousArbre;
+	   
+	   // D abord on sauvegarde le fils gauche de X;
+	   RBNode<T> filsGauche = X.leftChild;
+	   
+	   // Le fils gauche de X devient fils droit du pere
+	   P.rightChild = filsGauche;
+	   filsGauche.parent = P;
+	   
+	   // Maintenant on dit que le père de X est son fils gauche
+	   RBNode<T> nouveauFilsGauche = P;
+	   nouveauFilsGauche.parent = X;
+	   X.leftChild = nouveauFilsGauche;
+	   
+	   // On place X à la place de son pere, cad apres son grand pere
+	   X.parent = G;
+	   if(aDroite){
 		   G.rightChild = X;
 		   return;
 	   }
+	   G.leftChild = X;
+   }
+   
+   private void rotateRight( RBNode<T> X )
+   {
+	   // A MODIFIER/COMPLÉTER
+	   // X est le noeud qu'on veut remonter (il prend la place de son père)
+	   RBNode<T> P = X.parent;
+	   RBNode<T> G = X.grandParent();
+	   // On regarde si le pere de X est a droite ou a gauche de son grand pere
+	   // pour pouvoir placer X à la bonne place apres 
+	   boolean aDroite = false;
+	   if(P == G.rightChild){
+		   aDroite = true;
+	   }
+	   
+	   // D abord on sauvegarde le fils droit de X;
+	   RBNode<T> filsDroit = X.rightChild;
+	   
+	   // Le fils droit de X devient fils gauche du pere
+	   P.leftChild = filsDroit;
+	   filsDroit.parent = P;
+	   
+	   // Maintenant on dit que le père de X est son fils droit
+	   RBNode<T> nouveauFilsDroit = P;
+	   nouveauFilsDroit.parent = X;
+	   X.rightChild = nouveauFilsDroit;
+	   
+	   // On place X à la place de son pere, cad apres son grand pere
+	   X.parent = G;
+	   if(aDroite){
+		   G.rightChild = X;
+		   return;
+	   }
+	   G.leftChild = X;
    }
 
    public void printTreePreOrder()
