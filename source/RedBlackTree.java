@@ -51,6 +51,18 @@ public class RedBlackTree<T extends Comparable<? super T> >
    private T find(RBNode<T> current, int key)
    {
       // À COMPLÉTER
+	   if(current.value != null)
+	   {
+		   if(key < (int) current.value){
+			   return find(current.leftChild, key);
+		   }
+		   else if (key > (int) current.value){
+			   return find(current.rightChild, key);
+		   }
+		   else if (key == (int) current.value) {
+			   return current.value;
+		   }
+	   }
 	   return null;
    }
    
