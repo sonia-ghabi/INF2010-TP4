@@ -35,7 +35,7 @@
         System.out.println("Noeud introuvable.");
             
       System.out.println();
-      /*
+      
       // Affichage pre-ordre et post-ordre
       tree.printTreePreOrder();
       tree.printTreePostOrder();
@@ -44,6 +44,5 @@
       
       // Affichage par niveaux
       tree.printTreeLevelOrder(); 
-      */
    }
 }
